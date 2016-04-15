@@ -26,8 +26,19 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.ActionLink("Edit", "edit", new { id = item.NoteId }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.NoteId })
+            <div class="btn-group btn-group-xs">
+                <button type="button" class="btn btn-xs btn-default dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false">
+                    <i class="glyphicon glyphicon-cog"></i> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>@Html.ActionLink("Edit", "Edit", new { id = item.NoteId }) |</li>
+                    <li>@Html.ActionLink("Delete", "Delete", new { id = item.NoteId })</li>
+                </ul>
+            </div>
+
         </td>
         <td>
             @Html.ActionLink(item.Title, "Details", new { id = item.NoteId })

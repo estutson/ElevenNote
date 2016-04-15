@@ -56,5 +56,62 @@ namespace ElevenNote.Service
                 return ctx.SaveChanges() == 1;
             }
         }
+
+        public NoteDetailViewModel GetNoteById(int noteId)
+        {
+            NoteEntity entity;
+
+            using (var ctx = new ElevenNoteDbContext())
+            {
+                entity =
+                    ctx
+                        .Notes
+                        .Single(e => e.OwnerId == _userId && e.NoteId == noteId);
+            }
+
+            return
+                new NoteDetailViewModel
+                {
+                    Title = entity.Title,
+                    Content = entity.Content,
+                    NoteId = entity.NoteId,
+                    isStarred = entity.IsStarred,
+                    CreateUtc = entity.CreatedUtc,
+                    ModifiedUtc = entity.ModifiedUtc
+                };
+        }
+
+        public bool UpdateNote(NoteDetailViewModel vm)
+        {
+            using (var ctx = new ElevenNoteDbContext())
+            {
+                var entity =
+                    ctx
+                        .Notes
+                        .Single(e => e.OwnerId == _userId && e.NoteId == vm.NoteId);
+
+                entity.Title = vm.Title;
+                entity.Content = vm.Content;
+                entity.IsStarred = vm.isStarred;
+                entity.ModifiedUtc = DateTimeOffset.UtcNow;
+
+                return ctx.SaveChanges() == 1;
+            }
+        } 
+
+        public bool DeleteNote(int noteId)
+        {
+            using (var ctx = new ElevenNoteDbContext())
+            {
+                var entity =
+                    ctx
+                        .Notes
+                        .Single(e => e.OwnerId == _userId && e.NoteId == noteId);
+
+                ctx.Notes.Remove(entity);
+
+                return ctx.SaveChanges() == 1;
+            }
+        }
     }
 }
